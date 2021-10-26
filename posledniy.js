@@ -35,7 +35,7 @@ function getExpand(command) {
     var l = ae.value.lastIndexOf(" ", ae.selectionStart - 1)
     var ret = ae.value.substring(l + 1, ae.selectionStart)
 
-    alert(`"${command}" executed on "${document.title}" : "${ret}"`);
+    //alert(`"${command}" executed on "${document.title}" : "${ret}"`);
 
     return ret;
 
@@ -57,8 +57,8 @@ function lookup(abbr, callback) {
     var objectStore = transaction.objectStore("expand");
     var req = objectStore.get(abbr);
     req.onsuccess = function(event) {
-        console.log("lookup");
-        console.log(event);
+        //console.log("lookup");
+        //console.log(event);
         if(event.target.result) {
             callback(event.target.result)
         }
@@ -80,13 +80,17 @@ function saveExpand(text) {
     var db = event.target.result;
     var transaction = db.transaction(["expand"], "readwrite");
     var objectStore = transaction.objectStore("expand");
-    var req = objectStore.put(o);
+    if (o.abbr == o.full) {
+      var req = objectStore.delete(o.abbr);
+    } else {
+      var req = objectStore.put(o);
+    }
     req.onsuccess = function(event) {
         console.log(event);
     }
   }
 
-  console.log('inputEntered: ' + text);
+  //console.log('inputEntered: ' + text);
 
 }
 
