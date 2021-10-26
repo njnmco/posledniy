@@ -1,3 +1,3 @@
 
-zasnut.zip : zasnut.js manifest.json
+posledniy.zip : posledniy.js manifest.json
 	zip $@ $?

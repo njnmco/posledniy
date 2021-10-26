@@ -1,6 +1,6 @@
-# zasnut
+# posledniy
 
-This is the repository for zasnut, an open-source tab suspend extension
+This is the repository for posledniy, an open-source tab suspend extension
 for web browsers.
 
 The Kickstarter may be dead, but the extension was completed anyways.
@@ -28,14 +28,14 @@ When this extension is installed, tabs will automatically unload around
 **BSD**
 
 This was designed to be a drop-in library for other extensions - if you are interested
-in bundling zasnut with your extension, please pay special attention to the 3rd clause
+in bundling posledniy with your extension, please pay special attention to the 3rd clause
 of the BSD license.
 
 Other licenses may be granted on request.
 
 ## Chrome Store
 
-Zasnut is available on the [Chrome Web Store](http://zasnut.xyz) for "Google Trusted Testers" only,
+Zasnut is available on the [Chrome Web Store](http://posledniy.xyz) for "Google Trusted Testers" only,
 for their convenience.
 
 If you would like access, please establish a human relationship with me. Alternatively,
