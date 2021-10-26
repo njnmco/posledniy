@@ -1,11 +1,20 @@
 {
     "manifest_version": 3,
-    "name" : "posledniy (tab suspender)",
-    "description" : "puts tabs to sleep",
-    "version": "0.2.2",
-    "permissions": ["alarms"],
+    "name" : "posledniy (text expander)",
+    "description" : "Expand text",
+    "version": "0.1.0",
+    "permissions": ["activeTab", "scripting"],
     "background": {
         "service_worker": "posledniy.js"
+    },
+    "omnibox": { "keyword" : "posledniy" },
+    "commands": {
+        "expand": {
+          "suggested_key": {
+            "default": "Ctrl+Space"
+          },
+          "description": "Run text expansion on the current inputet."
+        }
     }
 }
 

@@ -29,33 +29,22 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-chrome.tabs.onActivated.addListener(function(active) {
-    chrome.alarms.create(active.tabId+"new", {periodInMinutes: 2});
-    chrome.alarms.clear(active.tabId+"zzz");
+function doExpand(command) {
+  alert(`"${command}" executed on ${document.title}`);
+}
+
+function saveExpand(text) {
+  console.log('inputEntered: ' + text);
+  alert('You just typed "' + text + '"');
+
+}
+
+chrome.commands.onCommand.addListener((command, tab) => {
+  chrome.scripting.executeScript({
+    target: {tabId: tab.id},
+    func: doExpand,
+    args: [command],
+  });
 });
 
-chrome.tabs.onRemoved.addListener(function(tId) {
-    chrome.alarms.clear(tId+"new");
-    chrome.alarms.clear(tId+"zzz");
-});
-
-chrome.tabs.onCreated.addListener(function(tab) {
-    chrome.alarms.create(tab.id+ "new", {periodInMinutes: 5});
-});
-
-chrome.alarms.onAlarm.addListener(function(alarm) {
-    chrome.tabs.get(Number(alarm.name.replace(/[^\d]+/, '')), (t) => {
-        if (chrome.runtime.lastError) {
-            //
-        } else if (t.active || t.audible || t.pinned || !t.autoDiscardable) {
-            return true;
-        } else if (alarm.name.endsWith("zzz")) {
-            chrome.tabs.discard(t.id);
-        } else {
-            chrome.alarms.create(t.id + "zzz", {periodInMinutes: 2});
-        }
-        chrome.alarms.clear(alarm.name);
-    })
-})
-
-  
+chrome.omnibox.onInputEntered.addListener(saveExpand);
