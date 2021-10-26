@@ -43,7 +43,8 @@ function getExpand(command) {
 
 function doExpand(expand) {
     var ae = document.activeElement;
-    ae.value = ae.value.slice(0, -expand.abbr.length) + expand.full;
+    var i = ae.selectionStart;
+    ae.value = ae.value.slice(0, i - expand.abbr.length) + expand.full + ae.value.slice(i);
 }
 
 function lookup(abbr, callback) {
