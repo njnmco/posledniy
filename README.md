@@ -1,17 +1,12 @@
 # posledniy
 
-This is the repository for posledniy, an open-source tab suspend extension
-for web browsers.
+This is the repository for posledniy, an open-source text expander for chrome.
 
-The Kickstarter may be dead, but the extension was completed anyways.
-
-When this extension is installed, tabs will automatically unload around
-2 minutes after being de-selected.
 
 
 ## Design goals
 
-  * Pico weight - extremely light, ~20 lines of code.
+  * Pico weight - extremely light, <100 lines of code.
   * Easy to modify
   * Easy to audit - no minification, no obfuscation, no bullshit.
   * Manifest V3 - this requires Chrome 88 or higher, but is reasonably future proof.
@@ -33,11 +28,4 @@ of the BSD license.
 
 Other licenses may be granted on request.
 
-## Chrome Store
-
-Zasnut is available on the [Chrome Web Store](http://posledniy.xyz) for "Google Trusted Testers" only,
-for their convenience.
-
-If you would like access, please establish a human relationship with me. Alternatively,
-you can sponsor the project by clicking the ❤️  button above and I will add you to the list.
 
