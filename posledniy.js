@@ -29,22 +29,107 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-function doExpand(command) {
-  alert(`"${command}" executed on ${document.title}`);
+function getExpand(command) {
+    var ae = document.activeElement
+
+    var l = ae.value.lastIndexOf(" ", ae.selectionStart - 1)
+    var ret = ae.value.substring(l + 1, ae.selectionStart)
+
+    alert(`"${command}" executed on "${document.title}" : "${ret}"`);
+
+    return ret;
+
+}
+
+function doExpand(expand) {
+    var ae = document.activeElement;
+    ae.value = ae.value.slice(0, -expand.abbr.length) + expand.full;
+}
+
+function lookup(abbr, callback) {
+  var dbo = indexedDB.open("posledniy");
+  dbo.onerror = console.log;
+
+  dbo.onsuccess = function(event) {
+    var db = event.target.result;
+    var transaction = db.transaction(["expand"], "readonly");
+    var objectStore = transaction.objectStore("expand");
+    var req = objectStore.get(abbr);
+    req.onsuccess = function(event) {
+        console.log("lookup");
+        console.log(event);
+        if(event.target.result) {
+            callback(event.target.result)
+        }
+    }
+  }
+
 }
 
 function saveExpand(text) {
+  var i = text.indexOf(" ");
+  var o = {
+      abbr : text.slice(0, i),
+      full : text.slice(i+1)
+  }
+
+  var dbo = indexedDB.open("posledniy");
+
+  dbo.onsuccess = function(event) {
+    var db = event.target.result;
+    var transaction = db.transaction(["expand"], "readwrite");
+    var objectStore = transaction.objectStore("expand");
+    var req = objectStore.put(o);
+    req.onsuccess = function(event) {
+        console.log(event);
+    }
+  }
+
   console.log('inputEntered: ' + text);
-  alert('You just typed "' + text + '"');
 
 }
 
-chrome.commands.onCommand.addListener((command, tab) => {
-  chrome.scripting.executeScript({
+chrome.commands.onCommand.addListener(async function(command, tab) {
+  let results = await chrome.scripting.executeScript({
     target: {tabId: tab.id},
-    func: doExpand,
+    func: getExpand,
     args: [command],
   });
+
+  console.log(results);
+
+  let abbr = results[0].result;
+  if(abbr) {
+      lookup(abbr, (full) => chrome.scripting.executeScript({
+        target: {tabId: tab.id},
+        func: doExpand,
+        args: [full]
+      })
+      )
+  }
+
 });
 
 chrome.omnibox.onInputEntered.addListener(saveExpand);
+
+
+chrome.runtime.onInstalled.addListener(function(){
+    // Let us open our database
+    var DBOpenRequest = indexedDB.open("posledniy", 1);
+
+    DBOpenRequest.onupgradeneeded = function(event) {
+      var db = event.target.result;
+
+      db.onerror = function(event) {
+        console.log('Error loading database.');
+        console.log(event);
+      };
+
+      // Create an objectStore for this database
+      var objectStore = db.createObjectStore("expand", { keyPath: "abbr" });
+
+      console.log("created")
+
+    };
+
+});
